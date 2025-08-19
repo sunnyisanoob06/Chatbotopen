@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chatbot</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+</head>
+<body>
+  <header>
+    <h1>🤖 My AI Chatbot</h1>
+    <button id="logoutBtn">Logout</button>
+  </header>
+
+  <main>
+    <p>Welcome! Start chatting with the bot below 👇</p>
+    <div id="n8n-chat"></div>
+  </main>
+
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script type="module">
+    import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+
+    // Check if user is logged in
+    const user = netlifyIdentity.currentUser();
+    if (!user) {
+      window.location.href = "/login.html"; // redirect if not logged in
+    }
+
+    // Logout button
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      netlifyIdentity.logout();
+      window.location.href = "/login.html";
+    });
+
+    // Create chatbot
+    createChat({
+      webhookUrl: 'https://sunnyisnoob.app.n8n.cloud/webhook/71e36421-3d67-467d-9a02-b065393dd461/chat',
+      theme: {
+        primaryColor: "#4f46e5", // Indigo
+        secondaryColor: "#10b981", // Green
+        backgroundColor: "#f9fafb",
+      }
+    });
+  </script>
+</body>
+</html>

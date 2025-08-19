@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login / Signup</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="auth-container">
+    <h1>🔐 Welcome</h1>
+    <p>Login or create an account to use the chatbot</p>
+    <button id="loginBtn">Login / Signup</button>
+  </div>
+
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script>
+    const loginBtn = document.getElementById("loginBtn");
+
+    loginBtn.addEventListener("click", () => {
+      netlifyIdentity.open();
+    });
+
+    // Redirect after login
+    netlifyIdentity.on("login", () => {
+      window.location.href = "/";
+    });
+  </script>
+</body>
+</html>
