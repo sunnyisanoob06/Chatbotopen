@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Chatbot</title>
+  <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- LOGIN SCREEN -->
+    <div id="auth-screen" class="screen">
+      <div class="card">
+        <h1>Welcome 👋</h1>
+        <p>Please log in or sign up to continue</p>
+        <button id="loginBtn">Login / Signup</button>
+      </div>
+    </div>
+
+    <!-- CHAT SCREEN -->
+    <div id="chat-screen" class="screen hidden">
+      <header>
+        <h1>🤖 AI Chatbot</h1>
+        <button id="logoutBtn">Logout</button>
+      </header>
+      <main>
+        <div id="n8n-chat"></div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Netlify Identity -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+  <!-- Chat + Auth Logic -->
+  <script type="module">
+    import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+
+    const authScreen = document.getElementById("auth-screen");
+    const chatScreen = document.getElementById("chat-screen");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    // Login button opens Netlify Identity
+    loginBtn.addEventListener("click", () => netlifyIdentity.open());
+
+    // After login → show chat
+    netlifyIdentity.on("login", user => {
+      authScreen.classList.add("hidden");
+      chatScreen.classList.remove("hidden");
+
+      // Initialize chatbot once user logs in
+      createChat({
+        webhookUrl: "https://sunnyisnoob.app.n8n.cloud/webhook/71e36421-3d67-467d-9a02-b065393dd461/chat",
+        target: "#n8n-chat",
+        theme: {
+          primaryColor: "#2563eb",  // Blue-600
+          secondaryColor: "#10b981", // Emerald
+          backgroundColor: "#f9fafb"
+        }
+      });
+    });
+
+    // Logout → go back to login screen
+    logoutBtn.addEventListener("click", () => {
+      netlifyIdentity.logout();
+      chatScreen.classList.add("hidden");
+      authScreen.classList.remove("hidden");
+    });
+
+    // Auto-login check (refresh persistence)
+    if (netlifyIdentity.currentUser()) {
+      authScreen.classList.add("hidden");
+      chatScreen.classList.remove("hidden");
+      createChat({
+        webhookUrl: "https://sunnyisnoob.app.n8n.cloud/webhook/71e36421-3d67-467d-9a02-b065393dd461/chat",
+        target: "#n8n-chat",
+        theme: {
+          primaryColor: "#2563eb",
+          secondaryColor: "#10b981",
+          backgroundColor: "#f9fafb"
+        }
+      });
+    }
+  </script>
+</body>
+</html>
